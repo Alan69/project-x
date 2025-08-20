@@ -255,13 +255,13 @@ export const performanceReviewApi = createApi({
         const cleanData = {
           // Required fields
           review_order: review.review_order || 1, // Required NOT NULL field
-          // Direct foreign key fields - these should work if NocoDB is configured correctly
-          reviewer_id: review.peer_reviewer_id
-            ? parseInt(review.peer_reviewer_id)
-            : null,
-          self_assessment_id: review.self_assessment_id
-            ? parseInt(review.self_assessment_id)
-            : null,
+          // Use NocoDB relationship format to avoid system column errors
+          users: review.peer_reviewer_id
+            ? [parseInt(review.peer_reviewer_id)]
+            : [],
+          self_assessments: review.self_assessment_id
+            ? [parseInt(review.self_assessment_id)]
+            : [],
           // Optional fields that match the database schema
           status: review.status || "confirmed",
           feedback: review.feedback || "",
